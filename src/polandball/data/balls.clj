@@ -25,15 +25,17 @@
                      :results)))]
     (by-url url)))
 
-(defn insert-new [ball-url ball-title ball-description]
-  (exec-raw
-    polandball.data.common/ball-db
-    ["INSERT INTO balls (url)
-     VALUES (?)" [ball-url]])
-  (exec-raw
-    polandball.data.common/ball-db
-    ["INSERT INTO metadata (parenturl, title, description)
-     VALUES (?, ?, ?)" [ball-url ball-title ball-description]]))
+(defn insert-new [ball-title ball-description]
+  (let [ball-url (str "http://xd2000.com/balls/" (inc (total-count)))]
+    (exec-raw
+      polandball.data.common/ball-db
+      ["INSERT INTO balls (url)
+       VALUES (?)" [ball-url]])
+    (exec-raw
+      polandball.data.common/ball-db
+      ["INSERT INTO metadata (parenturl, title, description)
+       VALUES (?, ?, ?)" [ball-url ball-title ball-description]])
+  ball-url))
 
 
 

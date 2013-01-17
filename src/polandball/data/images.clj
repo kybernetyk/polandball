@@ -12,9 +12,12 @@
             WHERE parenturl = ?;" [parent-url]]
            :results)))
 
-(defn insert-new [image]
-  (exec-raw
-    polandball.data.common/image-db
-    ["INSERT INTO images (parenturl, url, path, thumbnailurl, thumbnailpath)
-     VALUES (?, ?, ?, ?, ?);" [(:parenturl image) (:url image) (:path image) (:thumbnailurl image) (:thumbnailpath image)]]))
+(defn insert-new [parent-url image-path thumbnail-path]
+  (let [image-url (str "http://xd2000.de/media/image")
+        thumb-url (str "http://xd2000.de/media/thumb")]
+    (exec-raw
+      polandball.data.common/image-db
+      ["INSERT INTO images (parenturl, url, path, thumbnailurl, thumbnailpath)
+       VALUES (?, ?, ?, ?, ?);" [parent-url, image-url, image-path, thumb-url, thumbnail-path]])
+    image-url))
 

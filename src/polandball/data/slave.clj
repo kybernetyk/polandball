@@ -50,13 +50,9 @@
 
 
 (defn insert-to-database [image]
-  (let [image (assoc image :url "http://url")
-        image (assoc image :thumbnailurl "http://tumbnail")
-        ball-count (balls/total-count)
-        ball-url (str "http://xd2000.com/balls/" (inc ball-count))
-        image (assoc image :parenturl ball-url)]
-    (balls/insert-new ball-url "new polandball desc" "new polandball title")
-    (images/insert-new image)))
+  (let [ball-url (balls/insert-new "new polandball desc" "new polandball title")]
+    (println (str "new ball url: " ball-url))
+    (images/insert-new ball-url (:path image) (:thumbnailpath image))))
 
 (defn push-to-database [images]
  (map insert-to-database images)) 
