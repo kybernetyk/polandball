@@ -7,10 +7,18 @@
 (defn by-url [url]
   (first (exec-raw
            polandball.data.common/ball-db
-           ["SELECT b.id, b.url, m.title, m.description, m.timestamp, m.public 
-            FROM balls b, metadata m
-            WHERE b.url = m.parenturl AND b.url = ?;" [url]]
+           ["SELECT b.id, b.url, m.title, m.description, m.timestamp, m.public, i.url as imageurl, i.thumbnailurl as thumburl
+            FROM balls b, metadata m, pb_images.images i
+            WHERE b.url = m.parenturl AND b.url = i.parenturl AND b.url = ?;" [url]]
            :results)))
+
+(defn all []
+  (exec-raw
+    polandball.data.common/ball-db
+    ["SELECT b.id, b.url, m.title, m.description, m.timestamp, m.public, i.url as imageurl, i.thumbnailurl as thumburl
+      FROM balls b, metadata m, pb_images.images i
+      WHERE b.url = m.parenturl AND b.url = i.parenturl;"]
+    :results))
 
 (defn total-count []
     (:cnt (first (exec-raw 
@@ -19,7 +27,8 @@
              :results))))
 
 (defn random []
-  (let [url (:url (first (exec-raw
+  (let [url (:url (first 
+                    (exec-raw
                      polandball.data.common/ball-db
                      ["SELECT url FROM balls ORDER BY RAND() LIMIT 1;"]
                      :results)))]
