@@ -5,19 +5,19 @@
 
 ;;-------------- db defs -------------
 (defdb ball-db
-       (mysql {:db "pb_balls" 
+       (mysql {:db "polandball" 
                :user "root" 
                :host "localhost" 
                :password ""}))
 
 (defdb image-db
-       (mysql {:db "pb_images" 
+       (mysql {:db "polandball" 
                :user "root" 
                :host "localhost" 
                :password ""}))
 
 (defdb rating-db
-       (mysql {:db "pb_ratings" 
+       (mysql {:db "polandball" 
                :user "root" 
                :host "localhost" 
                :password ""}))

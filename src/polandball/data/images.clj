@@ -5,34 +5,34 @@
 (use 'korma.db)
 (use 'korma.core)
 
-;; note: image urls are fetched in balls/by-url already
-;; no need to do this if you just want to get a ball
+(defrecord image [id image-path thumbnail-path])
 
+(defn make-image [amap]
+  (image. (:id amap)
+          (:path amap)
+          (:thumbnailpath amap)))
 
-(defn by-parent-url [parent-url]
-  (first (exec-raw
-           polandball.data.common/image-db
-           ["SELECT * 
-            FROM images 
-            WHERE parenturl = ?;" [parent-url]]
-           :results)))
+(defn get-path [image]
+  (:image-path image))
 
-(defn image-url-from-path [path]
-  (str "http://localhost/media/images/" 
-       (last 
-         (clojure.string/split path #"/"))))
+(defn get-thumbnailpath [image]
+  (:thumbnail-path image))
 
-(defn thumb-url-from-path [path]
-  (str "http://localhost/media/thumbnails/"
-       (last
-         (clojure.string/split path #"/"))))
+(defn get-id [image]
+  (:id image))
 
-(defn insert-new [parent-url image-path thumbnail-path]
-  (let [image-url (image-url-from-path image-path)
-        thumb-url (thumb-url-from-path thumbnail-path)] 
-    (exec-raw
-      polandball.data.common/image-db
-      ["INSERT INTO images (parenturl, url, path, thumbnailurl, thumbnailpath)
-       VALUES (?, ?, ?, ?, ?);" [parent-url, image-url, image-path, thumb-url, thumbnail-path]])
-    image-url))
+(defn by-id [image-id]
+  (make-image
+   (first (exec-raw
+          polandball.data.common/image-db
+          ["SELECT *
+           FROM images
+           WHERE id = ?;" [image-id]]
+          :results))))
 
+(defn insert-new [parent-id image-path thumbnail-path]
+    (:GENERATED_KEY
+      (exec-raw
+        polandball.data.common/image-db
+        ["INSERT INTO images (parentid, path, thumbnailpath)
+        VALUES (?, ?, ?);" [parent-id, image-path, thumbnail-path]])))

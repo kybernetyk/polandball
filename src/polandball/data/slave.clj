@@ -50,9 +50,10 @@
 
 
 (defn insert-to-database [image]
-  (let [ball-url (balls/insert-new "new polandball desc" "new polandball title")]
-    (println (str "new ball url: " ball-url))
-    (images/insert-new ball-url (:path image) (:thumbnailpath image))))
+  (println "insert to database:" image)
+  (let [ball-id (balls/insert-new "new polandball desc" "new polandball title")]
+    (println (str "new ball id: " ball-id))
+    (images/insert-new ball-id (:path image) (:thumbnailpath image))))
 
 (defn push-to-database [images]
  (map insert-to-database images)) 
